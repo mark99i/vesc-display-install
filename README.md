@@ -105,3 +105,33 @@ For example: `192.168.001.020:65102`. The `serial_speed` does not matter in this
 
 If you did everything correctly, the information from the ESC will start updating (a little slower than when connecting the UART).
 
+## Configuration description
+The entire configuration is stored in the vesc-display/configs/config.json file that appears after the first launch of vesc-display.
+
+Options and their descriptions:
+
+| Option | Description | 
+| ------ | ------ |
+| delay_update_ms | Pause in milliseconds between updates in the main thread of receiving information. It may be necessary if you want to reduce the load on the device or ESC by reducing the number of requests |
+| delay_chart_update_ms | Pause in milliseconds between graph updates in the GUI |
+| chart_power_points | The number of power graph points. The more points - the more time interval is displayed on the graph |
+| chart_speed_points | The number of speed graph points. |
+| wh_km_nsec_calc_interval | The update interval of the wh_km_nsec indicator, in seconds |
+| hw_controller_current_limit | The current parameter that is declared by your ESC manufacturer as the maximum. It only affects the calculation of the Load (L) point in the ESC statistics |
+| switch_a_b_esc | This option will reverse the display of ESC in the main window |
+| esc_b_id | When using Dual-ESC mode, it will require setting the ID of the second ESC |
+| write_logs | When this option is enabled, the application will record statistics when they are updated. They will be stored in the `logs` folder named `session_$date_$time.log`. They can be reproduced in the future via `vesc-display/main.py <path to log file>`. Please note that the log size is quite large, make sure that you don't run out of disk memory |
+| motor_magnets | The number of magnets in your motor. Required to convert ERPM to RPM. Affects the calculation of the current speed and mileage distances |
+| wheel_diameter | The outer diameter of the wheel in mm. Affects the calculation of the current speed and mileage distances |
+| battery_cells | The number of consecutive blocks of your battery. Affects the determination of the current charge level and operation of the `battery_tracking` function |
+| battery_mah | The declared or tested battery capacity in milliamps per hour. Affects and operation of the `battery_tracking` function |
+| serial_vesc_api | The API address of the `vesc-uart` service. By default, it is assumed that it is located on the same device |
+| serial_port | The address of the serial interface to connect to the ESC. It can have either the name of the physical port (eg. /dev/ttyUSB0) or the network address (see Running in test mode via TCP) |
+| serial_speed | The speed of the serial port, when using the physical interface to connect to the ESC |
+| service_enable_debug | Option to enable debugging of the `vesc-uart` service. By default, when enabled, the log will be output to syslog |
+| service_rcv_timeout_ms | The option of the maximum waiting time for the response of the `vesc-uart` service from ESC. It can be increased when using TCP mode and a bad network |
+
+Changes `serial_vesc_api`, `serial_port`, `serial_speed`, `service_enable_debug` and `service_rcv_timeout_ms` options require restarting the connection with ESC in the `service vesc-uart status` panel (UART button at the top).
+The remaining options are applied immediately after clicking OK in the editor.
+
+The standard values for the options can be found in the file `vesc-display/config.py`
