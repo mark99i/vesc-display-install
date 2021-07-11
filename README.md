@@ -93,7 +93,7 @@ The ID of the connected CAN ESC can be viewed in VescTool. After the ESC ID is k
 After the correct configuration, you should see the parameter updates from both ESC.
 
 For the correct display of the speed, the operation of the "battery tracking" function, it is necessary to set the correct parameters of the `battery_mah`, `battery_cells`, `motor_magnets`, and `wheel_diameter` options. 
-If these options are set correctly in ESC, you can get these parameters from the ESC `get battery and motor from vesc` button in settings
+If these options are set correctly in ESC, you can get these parameters from the ESC `get battery and motor from vesc` button in settings (supports only fw version 5.02).
 
 ## Running in test mode via TCP
 If your ESC has a Bluetooth module, thanks to the support of the `vesc-uart` tcp transport, you can test the functionality without connecting to the ESC serial port.
