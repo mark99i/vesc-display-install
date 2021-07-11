@@ -106,7 +106,7 @@ For example: `192.168.001.020:65102`. The `serial_speed` does not matter in this
 If you did everything correctly, the information from the ESC will start updating (a little slower than when connecting the UART).
 
 ## Configuration description
-The entire configuration is stored in the vesc-display/configs/config.json file that appears after the first launch of vesc-display.
+The entire configuration is stored in the `vesc-display/configs/config.json` file that appears after the first launch of `vesc-display`.
 
 Options and their descriptions:
 
