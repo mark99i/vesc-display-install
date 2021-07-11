@@ -14,6 +14,7 @@
 - Written entirely in Python
 - Layout support for different screens (currently only 640x480 are drawn)
 - Works on any device with Python 3.7 and higher
+- The performance reaches 12 information updates per second on an old and slow device, such as the Raspberry Pi Zero W
 - VESC-UART part can provide data to third-party services in Json via API
 
 ## Architecture details
@@ -133,5 +134,7 @@ Options and their descriptions:
 
 Changes `serial_vesc_api`, `serial_port`, `serial_speed`, `service_enable_debug` and `service_rcv_timeout_ms` options require restarting the connection with ESC in the `service vesc-uart status` panel (UART button at the top).
 The remaining options are applied immediately after clicking OK in the editor.
+
+All options, except for text `serial_vesc_api`, can be changed using the built-in GUI editor. And the config will also contain other service options, changing which is not recommended without studying the source code
 
 The standard values for the options can be found in the file `vesc-display/config.py`
