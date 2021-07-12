@@ -6,6 +6,9 @@
   <tr><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/vesc_uart_status_info.PNG' width=270></td><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/settings.PNG' width=270></td></tr>
 </table>
 
+## Russian README.md: 
+https://github.com/mark99i/vesc-display-install/blob/main/README.ru.md
+
 ## Video demonstration
 https://youtu.be/2bIfX92aeMQ
 
