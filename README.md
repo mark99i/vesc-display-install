@@ -1,4 +1,4 @@
-# Open source display for VESC
+# OpenSource Display for VESC Controllers
 ## Screenshots
 <img src='https://github.com/mark99i/vesc-display-install/raw/main/main_window.png' width=580>
 <table>
@@ -6,6 +6,8 @@
   <tr><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/vesc_uart_status_info.PNG' width=270></td><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/settings.PNG' width=270></td></tr>
 </table>
 
+## Video demonstration
+https://youtu.be/2bIfX92aeMQ
 
 ## Usability features:
 - Customizable interface
@@ -27,9 +29,9 @@ The project consists of two parts: `vesc-uart` and `vesc-display`
 
 The first part,`vesc-uart`, holds the connection to the serial interface connected to the ESC. 
 Starts an HTTP server for receiving requests, receives data from ESC when requests are received and returns it as a JSON structure.
-`vesc-uart` also supports tcp transport, for connecting to tcp server VescTool
+`vesc-uart` also supports tcp transport, for connecting to tcp server VescTool. ( https://github.com/mark99i/vesc-uart )
 
-The second part, `vesc-display`, receives data via the API and displays it in the PyQt5-based user interface
+The second part, `vesc-display`, receives data via the API and displays it in the PyQt5-based user interface. ( https://github.com/mark99i/vesc-display )
 
 If necessary, the parts can be located on different devices (and in different places), only ip connectivity is required
 
@@ -113,6 +115,8 @@ If you did everything correctly, the information from the ESC will start updatin
 
 ## Configuration description
 The entire configuration is stored in the `vesc-display/configs/config.json` file that appears after the first launch of `vesc-display`.
+All options, except for text `serial_vesc_api` and `serial_port`, can be changed using the built-in GUI editor. Config also contain other service options, changing which is not recommended without studying the source code
+
 
 Options and their descriptions:
 
@@ -139,7 +143,5 @@ Options and their descriptions:
 
 Changes `serial_vesc_api`, `serial_port`, `serial_speed`, `service_enable_debug` and `service_rcv_timeout_ms` options require restarting the connection with ESC in the `service vesc-uart status` panel (UART button at the top).
 The remaining options are applied immediately after clicking OK in the editor.
-
-All options, except for text `serial_vesc_api`, can be changed using the built-in GUI editor. And the config will also contain other service options, changing which is not recommended without studying the source code
 
 The standard values for the options can be found in the file `vesc-display/config.py`
