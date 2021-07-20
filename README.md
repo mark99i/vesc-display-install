@@ -56,7 +56,7 @@ python3 -c "import serial.tools.list_ports; print ([port.name for port in serial
 Check that the serial interface (eg. /dev/ttyUSB0) connected to ESC is available as a result of last command.
 
 Create a systemd service and run it.
-As a result of executing the `systemd vesc-uart command`, the status should be `active`, and the last line of the log is `starting server`
+As a result of executing the `systemd vesc-uart status` command, the status should be `active`, and the last line of the log is `starting server`
 ```
 cat > /etc/systemd/system/vesc-uart.service << EOF
 [Unit]
@@ -78,7 +78,7 @@ service vesc-uart start
 service vesc-uart status
 systemctl enable vesc-uart
 ```
-The installation of 'vesc-uart` is finished.
+The installation of `vesc-uart` is finished.
 
 To automatically start the GUI at system startup, you need to refer to the manual for the GUI environment you have installed. 
 In my case, it was a Raspberry Pi Zero W
@@ -137,7 +137,7 @@ Options and their descriptions:
 | motor_magnets | The number of magnets in your motor. Required to convert ERPM to RPM. Affects the calculation of the current speed and mileage distances |
 | wheel_diameter | The outer diameter of the wheel in mm. Affects the calculation of the current speed and mileage distances |
 | battery_cells | The number of consecutive blocks of your battery. Affects the determination of the current charge level and operation of the `battery_tracking` function |
-| battery_mah | The declared or tested battery capacity in milliamps per hour. Affects and operation of the `battery_tracking` function |
+| battery_mah | The declared or tested battery capacity in milliamps per hour. Affects on operation of the `battery_tracking` function |
 | serial_vesc_api | The API address of the `vesc-uart` service. By default, it is assumed that it is located on the same device |
 | serial_port | The address of the serial interface to connect to the ESC. It can have either the name of the physical port (eg. /dev/ttyUSB0) or the network address (see Running in test mode via TCP) |
 | serial_speed | The speed of the serial port, when using the physical interface to connect to the ESC |
