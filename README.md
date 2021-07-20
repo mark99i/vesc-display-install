@@ -11,7 +11,7 @@
 ## Video demonstration
 https://youtu.be/2bIfX92aeMQ
 
-## Usability features:
+## Usability features
 - Customizable interface
 - Fast display of current speed and current data
 - Displaying a graph by speed and power
@@ -19,7 +19,7 @@ https://youtu.be/2bIfX92aeMQ
 - Has several indicators of consumption efficiency (eg. WhKm, WhKmH)
 - Fully supports (and designed for) Dual-ESC mode
 
-## Architectural features:
+## Architectural features
 - Written entirely in Python
 - Layout support for different screens (currently only 640x480 are drawn)
 - Works on any device with Python 3.7 and higher
