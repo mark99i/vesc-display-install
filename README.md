@@ -1,13 +1,12 @@
 # OpenSource Display for VESC Controllers
+[Русская версия](https://github.com/mark99i/vesc-display-install/blob/main/README.ru.md) / **English version**
+
 ## Screenshots
 <img src='https://github.com/mark99i/vesc-display-install/raw/main/main_window.png' width=580>
 <table>
   <tr><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/indicators.PNG' width=270></td><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/session_info.PNG' width=270></td></tr>
   <tr><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/vesc_uart_status_info.PNG' width=270></td><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/settings.PNG' width=270></td></tr>
 </table>
-
-## Russian README.md: 
-https://github.com/mark99i/vesc-display-install/blob/main/README.ru.md
 
 ## Video demonstration
 https://youtu.be/2bIfX92aeMQ
