@@ -55,7 +55,7 @@ python3 -c "import serial.tools.list_ports; print ([port.name for port in serial
 В результате последней команды должен быть serial интерфейс, подключенный к ESC.
 
 Создайте systemd сервис и запустите.
-В результате выполнения команды `systemd vesc-uart status`, статус должен быть `active` и последняя строка `starting server`.
+В результате выполнения команды `service vesc-uart status`, статус должен быть `active` и последняя строка `starting server`.
 ```
 cat > /etc/systemd/system/vesc-uart.service << EOF
 [Unit]

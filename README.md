@@ -55,7 +55,7 @@ python3 -c "import serial.tools.list_ports; print ([port.name for port in serial
 Check that the serial interface (eg. /dev/ttyUSB0) connected to ESC is available as a result of last command.
 
 Create a systemd service and run it.
-As a result of executing the `systemd vesc-uart status` command, the status should be `active`, and the last line of the log is `starting server`
+As a result of executing the `service vesc-uart status` command, the status should be `active`, and the last line of the log is `starting server`
 ```
 cat > /etc/systemd/system/vesc-uart.service << EOF
 [Unit]
