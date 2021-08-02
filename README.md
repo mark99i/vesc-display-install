@@ -16,7 +16,9 @@ https://youtu.be/2bIfX92aeMQ
 - Fast display of current speed and current data
 - Displaying a graph by speed and power
 - Saves the total distance (odometer)
+- Calculation of the parameters of the session (average speed, maximum, watts, etc.)
 - Has several indicators of consumption efficiency (eg. WhKm, WhKmH)
+- Speedlogic mode with a maximum refresh rate for measuring acceleration 0-40, 0-50, 0-60, 0-70
 - Fully supports (and designed for) Dual-ESC mode
 
 ## Architectural features
@@ -95,15 +97,13 @@ chown -R $SUDO_USER:$SUDO_USER /home/$SUDO_USER/.config/autostart
 Enjoy!
 
 ## Setting up parameters
-After the first launch, if you use Dual-ESC, you will have information about only one ESC. To configure the display of data from the second one, first determine its ESC-ID.
+After the first launch, if you use DualESC, you will have information about only one ESC, and the speed and some other parameters will not be displayed correctly.
+Make sure that the options `MotorCFG` -> `AdditionalInfo` are correctly set on the locally connected ESC: `MotorPoles`, `WheelDiameter`, `BatteryCells`, `BatteryCapacity`.
 
-The ID of the locally connected ESC can be viewed by clicking on the `UART` label at the top, item `local controller id`.
-The ID of the connected CAN ESC can be viewed in VescTool. After the ESC ID is known, go to the settings (the icon in the corner on the top left) and set the `esc_b_id` item
+Then load these settings from ESC via the `get configuration from vesc` option in the settings.
+The options of the same name in the settings and `esc_b_id` should be synchronized.
 
-After the correct configuration, you should see the parameter updates from both ESC.
-
-For the correct display of the speed, the operation of the "battery tracking" function, it is necessary to set the correct parameters of the `battery_mah`, `battery_cells`, `motor_magnets`, and `wheel_diameter` options. 
-If these options are set correctly in ESC, you can get these parameters from the ESC `get battery and motor from vesc` button in settings (supports only fw version 5.02).
+If you use an unsupported VESC FW, the `get configuration from vesc` option will not work, the parameters will need to be set manually.
 
 ## Running in test mode via TCP
 If your ESC has a Bluetooth module, thanks to the support of the `vesc-uart` tcp transport, you can test the functionality without connecting to the ESC serial port.
@@ -126,9 +126,11 @@ Options and their descriptions:
 | ------ | ------ |
 | delay_update_ms | Pause in milliseconds between updates in the main thread of receiving information. It may be necessary if you want to reduce the load on the device or ESC by reducing the number of requests |
 | delay_chart_update_ms | Pause in milliseconds between graph updates in the GUI |
-| chart_power_points | The number of power graph points. The more points - the more time interval is displayed on the graph |
-| chart_speed_points | The number of speed graph points. |
-| wh_km_nsec_calc_interval | The update interval of the wh_km_nsec indicator, in seconds |
+| chart_points | The number of points on the graph. The more points there are, the longer the time interval is displayed on the graph |
+| chart_pcurrent_insteadof_power | Display the values of the total phase current (PC) on the graph instead of the power (W) |
+| nsec_calc_count | The number of states stored by the NSec calculation function is set based on UpdatesPerSeconds |
+| use_gui_lite | Use a simplified interface |
+| mtemp_insteadof_load | Display the motor temperature (MT) instead of loading the controller (L). Set 1 if you have a motor temperature sensor connected |
 | hw_controller_current_limit | The current parameter that is declared by your ESC manufacturer as the maximum. It only affects the calculation of the Load (L) point in the ESC statistics |
 | switch_a_b_esc | This option will reverse the display of ESC in the main window |
 | esc_b_id | When using Dual-ESC mode, it will require setting the ID of the second ESC |
