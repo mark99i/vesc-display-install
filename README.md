@@ -23,7 +23,7 @@ https://youtu.be/2bIfX92aeMQ
 
 ## Architectural features
 - Written entirely in Python
-- Layout support for different screens (currently only 640x480 are drawn)
+- Layout support for different screens (currently only 640x480 and 480x320 are drawn)
 - Works on any device with Python 3.7 and higher
 - The performance reaches 12 information updates per second on an old and slow device, such as the Raspberry Pi Zero W
 - VESC-UART part can provide data to third-party services in Json via API
