@@ -5,6 +5,7 @@
 <img src='https://github.com/mark99i/vesc-display-install/raw/main/main_window.png' width=580>
 <table>
   <tr><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/indicators.PNG' width=270></td><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/session_info.PNG' width=270></td></tr>
+  <tr><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/session_info_chart1.jpg' width=270></td><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/session_info_chart2.jpg' width=270></td></tr>
   <tr><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/vesc_uart_status_info.PNG' width=270></td><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/settings.PNG' width=270></td></tr>
 </table>
 
@@ -12,11 +13,13 @@
 https://youtu.be/2bIfX92aeMQ
 
 ## Usability features
-- Customizable interface
+- Two interface modes: expert (as in the screenshots) and simplified
+  - In expert mode, all current indicators for controllers, a graph of speed and power are available
+  - The simplified interface shows the display of the current speed, as well as information about the session and data from the last start when stopping. There are 3 parameters available for configuration
 - Fast display of current speed and current data
-- Displaying a graph by speed and power
 - Saves the total distance (odometer)
 - Calculation of the parameters of the session (average speed, maximum, watts, etc.)
+- Saving session history, plotting speed and power during the session
 - Has several indicators of consumption efficiency (eg. WhKm, WhKmH)
 - Speedlogic mode with a maximum refresh rate for measuring acceleration 0-40, 0-50, 0-60, 0-70
 - Fully supports (and designed for) Dual-ESC mode
@@ -25,7 +28,7 @@ https://youtu.be/2bIfX92aeMQ
 - Written entirely in Python
 - Layout support for different screens (currently only 640x480 and 480x320 are drawn)
 - Works on any device with Python 3.7 and higher
-- The performance reaches 12 information updates per second on an old and slow device, such as the Raspberry Pi Zero W
+- The performance reaches 16-18 information updates per second on an old and slow device, such as the Raspberry Pi Zero W
 - VESC-UART part can provide data to third-party services in Json via API
 
 ## Architecture details
@@ -39,7 +42,51 @@ The second part, `vesc-display`, receives data via the API and displays it in th
 
 If necessary, the parts can be located on different devices (and in different places), only ip connectivity is required
 
-## Installation
+## Installing the pigpio service on RaspberryPi
+_Note: You can skip this section if you will not use gpio pins to connect to the ESC._
+
+Connect to the device via SSH and clone the pigpio project:
+```
+# uncomment if you are in the session as a user and not as root
+# sudo -s 
+cd /root
+wget https://github.com/joan2937/pigpio/archive/master.zip
+unzip master.zip
+cd pigpio-master
+make
+make install
+```
+
+Create a systemd service and run it.
+```
+cat > /etc/systemd/system/pigpiod.service << EOF
+[Unit]
+Description=PIGPIO Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/root/pigpio-master/pigpiod -g -l
+StandardOutput=syslog
+StandardError=syslog
+
+KillSignal=SIGINT
+KillMode=process
+TimeoutStopSec=10
+TimeoutStartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+service pigpiod start
+service pigpiod status
+systemctl enable pigpiod
+```
+The installation of `pigpiod` is finished.
+
+## Installation `vesc-uart` and `vesc-display`
 Connect via SSH to the device, clone the project and install the necessary packages
 ```
 sudo -s
@@ -70,6 +117,11 @@ ExecStart=/usr/bin/python3 -u /home/$SUDO_USER/Desktop/vesc-uart/main.py
 StandardOutput=syslog
 StandardError=syslog
 
+KillSignal=SIGINT
+KillMode=process
+TimeoutStopSec=10
+TimeoutStartSec=10
+
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -96,6 +148,25 @@ chown -R $SUDO_USER:$SUDO_USER /home/$SUDO_USER/.config/autostart
 ```
 Enjoy!
 
+## Configuring the connection to VESC
+To create a configuration file, run `python3 vesc-display/main.py` and close it.
+The configuration file will be located at the path `vesc-display/configs/config.json`, use the `nano` editor for editing.
+
+There are three ways to connect to VESC: 
+- the physical port serial/uart or usb-serial adapter (scheme `port://`) 
+- tcp, with the intermediate device VescTool (scheme `tcp://`, see Run in test mode, using TCP) 
+- using gpio pins using software serial library pigpio (scheme `pigpio://`)
+
+Thus, the value of the `serial_vesc_path` option can have the form:
+- `port://{path_to_device}?speed={speed}` (for example: `port:///dev/ttyUSB0?speed=115200`)
+- `tcp://{ip_address}:{port}` (for example: `tcp://192.168.1.10:65102`)
+- `pigpio://?tx={tx_pin}&rx={rx_pin}&speed={speed}` (for example: `pigpio://?tx=21&rx=20&speed=57600`)
+
+If you are using pigpio, carefully study the pinout of your board to enter the correct gpio pin numbers for connection.
+Installing pins that are occupied (for example, by the display or the spi module of the sd card) may cause the device to malfunction.
+
+By default, the option value is `port:///dev/ttyUSB0?speed=115200`, that is, using an external usb-serial adapter and the speed is 115200.
+
 ## Setting up parameters
 After the first launch, if you use DualESC, you will have information about only one ESC, and the speed and some other parameters will not be displayed correctly.
 Make sure that the options `MotorCFG` -> `AdditionalInfo` are correctly set on the locally connected ESC: `MotorPoles`, `WheelDiameter`, `BatteryCells`, `BatteryCapacity`.
@@ -105,19 +176,19 @@ The options of the same name in the settings and `esc_b_id` should be synchroniz
 
 If you use an unsupported VESC FW, the `get configuration from vesc` option will not work, the parameters will need to be set manually.
 
-## Running in test mode via TCP
+## Run in test mode, using TCP
 If your ESC has a Bluetooth module, thanks to the support of the `vesc-uart` tcp transport, you can test the functionality without connecting to the ESC serial port.
 
 To do this, start the TCP Server in the VescTool connected to the ESC.
 
-Edit the `vesc-display/configs/config.json` file (will appear after the first launch) and change the `serial_port` option to `IP:PORT` in the format `iii.iii.iii.iii:pppppp`, where i is part of the tcp ip address of the VescTool server, and p is the port. 
-For example: `192.168.001.020:65102`. The `serial_speed` does not matter in this mode.
+Edit the `vesc-display/configs/config.json` file (it will appear after the first launch) and change the `serial_vesc_path` option to `tcp://{ip}:{port}`
+Example: `tcp://192.168.1.20:65102`.
 
 If you did everything correctly, the information from the ESC will start updating (a little slower than when connecting the UART).
 
 ## Configuration description
 The entire configuration is stored in the `vesc-display/configs/config.json` file that appears after the first launch of `vesc-display`.
-All options, except for text `serial_vesc_api` and `serial_port`, can be changed using the built-in GUI editor. Config also contain other service options, changing which is not recommended without studying the source code
+All options, except for text `serial_vesc_api` and `serial_vesc_path`, can be changed using the built-in GUI editor. Config also contain other service options, changing which is not recommended without studying the source code
 
 
 Options and their descriptions:
@@ -131,7 +202,12 @@ Options and their descriptions:
 | nsec_calc_count | The number of states stored by the NSec calculation function is set based on UpdatesPerSeconds |
 | use_gui_lite | Use a simplified interface |
 | mtemp_insteadof_load | Display the motor temperature (MT) instead of loading the controller (L). Set 1 if you have a motor temperature sensor connected |
+| speed_as_integer | Display the speed as an integer (without the fractional part) |
+| write_session | Record your trip history |
+| write_session_track | Record speed and power points during the trip for generate charts |
+| session_track_average_sec | The number of seconds for which the average value of speed and power is taken. For short trips, slide 5-8, for long ones, increase |
 | hw_controller_current_limit | The current parameter that is declared by your ESC manufacturer as the maximum. It only affects the calculation of the Load (L) point in the ESC statistics |
+| hw_controller_voltage_offset_mv | Offset of voltage measurements (if the ESC measures inaccurately) |
 | switch_a_b_esc | This option will reverse the display of ESC in the main window |
 | esc_b_id | When using Dual-ESC mode, it will require setting the ID of the second ESC |
 | write_logs | When this option is enabled, the application will record statistics when they are updated. They will be stored in the `logs` folder named `session_$date_$time.log`. They can be reproduced in the future via `vesc-display/main.py <path to log file>`. Please note that the log size is quite large, make sure that you don't run out of disk memory |
@@ -140,12 +216,12 @@ Options and their descriptions:
 | battery_cells | The number of consecutive blocks of your battery. Affects the determination of the current charge level and operation of the `battery_tracking` function |
 | battery_mah | The declared or tested battery capacity in milliamps per hour. Affects on operation of the `battery_tracking` function |
 | serial_vesc_api | The API address of the `vesc-uart` service. By default, it is assumed that it is located on the same device |
-| serial_port | The address of the serial interface to connect to the ESC. It can have either the name of the physical port (eg. /dev/ttyUSB0) or the network address (see Running in test mode via TCP) |
+| serial_vesc_path | see Configuring the connection to VESC (above) |
 | serial_speed | The speed of the serial port, when using the physical interface to connect to the ESC |
 | service_enable_debug | Option to enable debugging of the `vesc-uart` service. By default, when enabled, the log will be output to syslog |
 | service_rcv_timeout_ms | The option of the maximum waiting time for the response of the `vesc-uart` service from ESC. It can be increased when using TCP mode and a bad network |
 
-Changes `serial_vesc_api`, `serial_port`, `serial_speed`, `service_enable_debug` and `service_rcv_timeout_ms` options require restarting the connection with ESC in the `service vesc-uart status` panel (UART button at the top).
+Changes `serial_vesc_api`, `serial_vesc_path`, `service_enable_debug` and `service_rcv_timeout_ms` options require restarting the connection with ESC in the `service vesc-uart status` panel (UART button at the top).
 The remaining options are applied immediately after clicking OK in the editor.
 
 The standard values for the options can be found in the file `vesc-display/config.py`
