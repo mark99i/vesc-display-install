@@ -5,7 +5,7 @@
 <img src='https://github.com/mark99i/vesc-display-install/raw/main/main_window.png' width=580>
 <table>
   <tr><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/indicators.PNG' width=270></td><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/session_info.PNG' width=270></td></tr>
-  <tr><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/session_info_chart1.jpg' width=270></td><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/session_info_chart2.jpg' width=270></td></tr>
+  <tr><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/session_info_chart_1.jpg' width=270></td><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/session_info_chart_2.jpg' width=270></td></tr>
   <tr><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/vesc_uart_status_info.PNG' width=270></td><td><img src='https://github.com/mark99i/vesc-display-install/raw/main/settings.PNG' width=270></td></tr>
 </table>
 
