@@ -15,7 +15,7 @@ https://youtu.be/2bIfX92aeMQ
 ## Usability features
 - Two interface modes: expert (as in the screenshots) and simplified
   - In expert mode, all current indicators for controllers, a graph of speed and power are available
-  - The simplified interface shows the display of the current speed, as well as information about the session and data from the last start when stopping. There are 3 parameters available for configuration
+  - The simplified interface displays the current speed, as well as information about the session and data from the last start when stopping. There are 3 parameters available for configuration
 - Fast display of current speed and current data
 - Saves the total distance (odometer)
 - Calculation of the parameters of the session (average speed, maximum, watts, etc.)
